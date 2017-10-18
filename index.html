@@ -1,0 +1,1259 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Computing an upper bound on bridge indexes with Python</title>
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/solarized.css">
+    <link rel="stylesheet" href="css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="css/overrides.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section> <!-- title slide -->
+          <h1>Computing an upper bound on bridge indexes with Python</h1>
+          <div class="presenter">Genevieve Johnson</div>
+          <div class="event">MA thesis defense, Fall 2017</br>
+          University of Northern Iowa</div>
+        </section>
+        <section> <!-- intro to Knots & diagrams -->
+          <section><h2>Knots &amp; diagrams</h2>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="fancy-box">
+                    <figure>
+                      <img src="images/fig_unknot.png" alt="a diagram of the unknot with no crossings">
+                      <figcaption>unknot</figcaption>
+                    </figure>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="fancy-box">
+                    <figure>
+                      <img src="images/fig_trefoil_diagram.png" alt="a diagram of the trefoil">
+                      <figcaption>trefoil</figcaption>
+                    </figure>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section><h2>Parts of a diagram</h2>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="fancy-box">
+                    <figure>
+                        <img src="images/fig_underpass.png" alt="an underpass">
+                        <figcaption>underpass</figcaption>
+                      </figure>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="fancy-box fragment">
+                    <figure>
+                        <img src="images/fig_overpass.png" alt="an overpass">
+                        <figcaption>overpass</figcaption>
+                      </figure>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="fancy-box fragment">
+                    <figure>
+                        <img src="images/fig_bridge.png" alt="a bridge">
+                        <figcaption>bridge</figcaption>
+                      </figure>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </section>
+        <section> <!-- Planar diagram codes -->
+          <section><h2>Planar diagram codes</h2>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="fancy-box">
+                    <figure>
+                      <img src="images/fig_pd_code_crossing.png" alt="a labeled diagram of the trefoil with PD code (2,6,3,5)(4,2,5,1)(6,4,1,3)">
+                      <figcaption>(2,6,3,5)(4,2,5,1)(6,4,1,3)</figcaption>
+                    </figure>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <h3>Creating a PD code</h3>
+                  <ol>
+                    <li>Pick a starting point &amp; direction to travel</li>
+                    <li>Label each edge</li>
+                    <li>Write a tuple for each crossing</li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section><h3>A diagram may have multiple PD codes!</h3>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="fancy-box">
+                    <figure>
+                      <img src="images/fig_trefoil_diagram_labeled_1.png" alt="a labeled diagram of the trefoil with PD code (2,6,3,5)(4,2,5,1)(6,4,1,3)">
+                      <figcaption>(2,6,3,5)(4,2,5,1)(6,4,1,3)</figcaption>
+                    </figure>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="fancy-box">
+                    <figure>
+                      <img src="images/fig_trefoil_diagram_labeled_2.png" alt="a labeled diagram of the trefoil with PD code (1,5,2,4)(3,1,4,6)(5,3,6,2)">
+                      <figcaption>(1,5,2,4)(3,1,4,6)(5,3,6,2)</figcaption>
+                    </figure>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section><h3>Draw a diagram from a PD code</h3>
+            <p>(2,6,3,5)(4,2,5,1)(6,4,1,3)</p>
+            <div class="container">
+              <div class="row">
+                <div class="col">
+                  <div class="fancy-box" "style=position:relative;">
+                    <img class="crossings_from_pd_code fragment" src="images/fig_crossings_from_pd_code.png" alt="crossings corresponding to the PD code (2,6,3,5)(4,2,5,1)(6,4,1,3)">
+                    <img class="diagram_from_pd_code fragment" src="images/fig_diagram_from_pd_code_cropped.png" alt="a labeled diagram corresponding to the PD code (2,6,3,5)(4,2,5,1)(6,4,1,3)">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </section>
+        <section> <!-- intro to Reidemeister moves -->
+          <section><h2>Reidemeister moves</h2>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="fancy-box">
+                    <figure>
+                        <img src="images/fig_reidemeister_move_1.png" alt="Reidemeister move of type 1">
+                        <figcaption>type 1</figcaption>
+                      </figure>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="fancy-box">
+                    <figure>
+                        <img src="images/fig_reidemeister_move_2.png" alt="Reidemeister move of type 2">
+                        <figcaption>type 2</figcaption>
+                      </figure>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="fancy-box">
+                    <figure>
+                        <img src="images/fig_reidemeister_move_3.png" alt="Reidemeister move of type 3">
+                        <figcaption>type 3</figcaption>
+                      </figure>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section><h2>Theorem</h2>
+            <blockquote>Two knot diagrams belonging to the same knot, up to planar isotopy, can be related by a sequence of the three Reidemeister moves.</blockquote>
+            <div class="container">
+              <div class="row">
+                <div class="col">
+                  <div class="fancy-box">
+                    <figure>
+                      <img src="images/fig_rm_moves_chained.png" alt="A series of Reidemeister moves performed on a diagram of the trefoil">
+                      <figcaption>a series of Reidemeister moves</figcaption>
+                    </figure>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </section>
+        <section> <!-- Reidemeister move type 1 -->
+          <section><h2>Simplify with Reidemeister move type 1</h2>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="fancy-box">
+                    <img src="images/fig_rm1_diagrams.png" alt="Diagram segments which can simplified by a Reidemeister move of type 1">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section><h2>The usual label changes</h2>
+            <div class="row d-flex justify-content-center">
+              <div class="col-md-4">
+                <div style="text-align:left;">
+                  <code>
+                    x &rarr; x, x&lt;b </br>
+                    x &rarr; x-2, x&gt;b
+                  </code>
+                </div>
+              </div>
+            </div>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="fancy-box">
+                    <figure>
+                      <img src="images/fig_6_1_with_twist_at_3.png" alt="A diagram before and after being simplified by Reidemeister move of type 1">
+                    </figure>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section><h3>...unless b=1</h3>
+            <div class="fragment current-visible replace">
+              <h4 style="margin-bottom:0;">Applying the usual label changes:</h4>
+              <div class="row d-flex justify-content-center">
+                <div class="col-md-4">
+                  <div style="text-align:left;">
+                    <code>
+                      x &rarr; x, x&lt;1 </br>
+                      x &rarr; x-2, x&gt;1
+                    </code>
+                  </div>
+                </div>
+              </div>
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="fancy-box" style="position:relative;">
+                      <figure>
+                        <img src="images/fig_6_1_with_twist_at_1_naive.png" alt="A diagram with a loop at edge 1 before and after being naively simplified by Reidemeister move of type 1">
+                      </figure>
+                      <div class="label-bad 6-1-with-twist-at-1"> </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="fragment">
+              <h4 style="margin-bottom:0;">Instead:</h4>
+              <div class="row d-flex justify-content-center">
+                <div class="col-md-4">
+                  <div style="text-align:left;">
+                    <code>
+                      x &rarr; x-2, x&gt;2 </br>
+                      x &rarr; m-2, x&#61;2
+                    </code>
+                  </div>
+                </div>
+              </div>
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="fancy-box" style="position:relative;">
+                      <figure>
+                        <img src="images/fig_6_1_with_twist_at_1_correct.png" alt="A diagram with a loop at edge 1 before and after being naively simplified by Reidemeister move of type 1">
+                      </figure>
+                      <div class="label-good 6-1-with-twist-at-1"> </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section><h3>...or b=m</h3>
+            <div class="fragment current-visible replace">
+              <h4 style="margin-bottom:0;">Applying the usual label changes:</h4>
+              <div class="row d-flex justify-content-center">
+                <div class="col-md-4">
+                  <div style="text-align:left;">
+                    <code>
+                      x &rarr; x, x&lt;m </br>
+                      x &rarr; x-2, x&gt;m
+                    </code>
+                  </div>
+                </div>
+              </div>
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="fancy-box" style="position:relative;">
+                      <figure>
+                        <img src="images/fig_6_1_with_twist_at_m_naive.png" alt="A diagram with a loop at edge m before and after being naively simplified by Reidemeister move of type 1">
+                      </figure>
+                      <div class="label-bad 6-1-with-twist-at-m"> </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="fragment">
+              <h4 style="margin-bottom:0;">Instead:</h4>
+              <div class="row d-flex justify-content-center">
+                <div class="col-md-4">
+                  <div style="text-align:left;">
+                    <code>
+                      x &rarr; x, x&le;m-2 </br>
+                      x &rarr; 1, x&#61;m-1
+                    </code>
+                  </div>
+                </div>
+              </div>
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="fancy-box" style="position:relative;">
+                      <figure>
+                        <img src="images/fig_6_1_with_twist_at_m_correct.png" alt="A diagram with a loop at edge m before and after being naively simplified by Reidemeister move of type 1">
+                      </figure>
+                      <div class="label-good 6-1-with-twist-at-m"> </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </section>
+        <section> <!-- Reidemeister move type 2 -->
+          <section><h2>Simplify with Reidemeister move type 2</h2>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="fancy-box">
+                    <figure>
+                        <img src="images/fig_rm2_pd_codes.png" alt="Diagram segments simplifiable by a Reidemeister move of type 2 without edge 1 in the loop">
+                      </figure>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section><h2>The usual label changes</h2>
+            <div class="row d-flex justify-content-center">
+              <div class="col-md-5">
+                <div style="text-align:left;">
+                  <code>
+                    x &rarr; x, x&lt;n<sub>1</sub></br>
+                    x &rarr; x-2, n<sub>1</sub>&lt;x&lt;n<sub>2</sub></br>
+                    x &rarr; x-4, x&gt;n<sub>2</sub>
+                  </code>
+                </div>
+              </div>
+            </div>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="fancy-box">
+                    <figure>
+                      <img src="images/fig_rm2_n1_not_1.png" alt="A diagram before and after being simplified by Reidemeister move of type 2 with edge 1 not in the loop">
+                    </figure>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section><h3>...unless edge 1 is involved</h3>
+            <div class="fragment current-visible replace">
+              <h4 style="margin-bottom:0;">Applying the usual label changes:</h4>
+              <div class="row d-flex justify-content-center">
+                <div class="col-md-5">
+                  <div style="text-align:left;">
+                    <code>
+                      x &rarr; x, x&lt;1</br>
+                      x &rarr; x-2, 1&lt;x&lt;n<sub>2</sub></br>
+                      x &rarr; x-4, x&gt;n<sub>2</sub>
+                    </code>
+                  </div>
+                </div>
+              </div>
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="fancy-box" style="position:relative;">
+                      <figure>
+                        <img src="images/fig_rm2_n1_1_naive.png" alt="A diagram with a loop at edge 1 before and after being naively simplified by Reidemeister move of type 2">
+                      </figure>
+                      <div class="label-bad rm-2-at-1"> </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="fragment">
+              <h4 style="margin-bottom:0;">Instead:</h4>
+              <div class="row d-flex justify-content-center">
+                <div class="col-md-5">
+                  <div style="text-align:left;">
+                    <code>
+                      x &rarr; m-4, x=2</br>
+                      x &rarr; x-2, 2&lt;x&lt;n<sub>2</sub></br>
+                      x &rarr; x-4, x&gt;n<sub>2</sub>
+                    </code>
+                  </div>
+                </div>
+              </div>
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="fancy-box" style="position:relative;">
+                      <figure>
+                        <img src="images/fig_rm2_n1_1_correct.png" alt="A diagram with a loop at edge 1 before and after being correctly simplified by Reidemeister move of type 2">
+                      </figure>
+                      <div class="label-good rm-2-at-1"> </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </section>
+        <section> <!-- Drag the underpass" move -->
+          <section><h2>"Drag the underpass" move</h2>
+            <div class="container">
+              <div class="row">
+                <div class="col">
+                  <div class="fancy-box">
+                    <img src="images/fig_drag_underpass.png" alt="A diagram before and after dragging an underpass">
+                  </div>
+                </div>
+              </div>
+              <div class="row fragment">
+                <div class="col">
+                  <div class="fancy-box">
+                    <figure>
+                      <img src="images/fig_drag_underpass_rm.png" alt="A series of Reidemeister moves equivalent to dragging an underpass">
+                      <figcaption>This is a sequence of Reidemeister moves!</figcaption>
+                    </figure>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section><h2>Changes to diagrams</h2>
+            <div class="container">
+              <div class="row">
+                <div class="col">
+                  <div class="fancy-box">
+                    <img src="images/fig_drag_colored_segments.png" alt="a diagram before and after dragging an underpass with colored sections corresponding to the added edges">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <h3 class="small" style="margin-bottom:0;">The general idea</h3>
+                </div>
+                <div class="col-md-3"></div>
+                <div class="col-md-9">
+                  <div style="text-align:left;">
+                    <code>
+                      x &rarr; x, x&le;min(a,y)</br>
+                      x &rarr; x+2, min(a,y)&lt;x&le;max(a,y)</br>
+                      x &rarr; x+4, x&gt;max(a,y)
+                    </code>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section>
+            <h2>Example</h2>
+            <p>Drag (3,7,4,6) along edge 6 under (5,10,6,11)</p>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="fancy-box">
+                      <img src="images/fig_diagram_of_6_1.png" alt="diagram of 6_1">
+                  </div>
+                </div>
+                <div class="col-md-6 fragment">
+                  <div class="fancy-box">
+                      <img src="images/fig_diagram_of_6_1_dragged.png" alt="diagram of 6_1 after dragging an underpass">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </section>
+        <section><h2>Bridge count vs. bridge index</h2>
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="fancy-box">
+                  <figure>
+                    <img src="images/3_1_bridge_count.png" alt="a diagram of the trefoil with 3 bridges">
+                    <figcaption>bridge count</figcaption>
+                  </figure>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="fancy-box">
+                  <figure>
+                    <img src="images/3_1_bridge_index.png" alt="a diagram of the trefoil in 2 bridge form">
+                    <figcaption>bridge index</figcaption>
+                  </figure>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section><h2>Terminology change!</h2>
+          <dl>
+            <dt>bridge</dt>
+            <dd>a maximal overpass <em>which we have decided may have crossings added to it</em></dd>
+          </dl>
+        </section>
+        <section><h2>Process overview</h2>
+          <div class="column-fluid process">
+            <div class="row">
+              <div class="col-md-3 step start">
+                Create knot &amp; simplify
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-1"></div>
+              <div class="col-md-1 arrow-down">&darr;</div>
+              <div class="col-md-10"></div>
+            </div>
+            <div class="row">
+              <div class="col-md-3 step question">
+                Are there crossings?
+              </div>
+              <div class="col-md-1">
+                <div class="arrow-right">&rarr;</div>
+                <div class="label yes" style="top:-10px; left:18px;">yes</div>
+              </div>
+              <div class="col-md-4 step action">
+                Designate 2 bridges
+              </div>
+              <div class="col-md-4"></div>
+            </div>
+            <div class="row">
+              <div class="col-md-1"></div>
+              <div class="col-md-1">
+                <div class="arrow-down">&darr;</div>
+                <div class="label no" style="top:17px; left:-10px;">no</div>
+              </div>
+              <div class="col-md-3"></div>
+              <div class="col-md-2 arrow-down">&darr;</div>
+              <div class="col-md-5"></div>
+            </div>
+            <div class="row">
+              <div class="col-md-3 step end">
+                Count bridges
+              </div>
+              <div class="col-md-1"></div>
+              <div class="col-md-4 step action">
+                Drag underpasses &amp; simplify
+              </div>
+              <div class="col-md-1 arrow-left">&larr;</div>
+              <div class="col-md-3 step action">
+                Designate a bridge
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3"></div>
+              <div class="col-md-1">
+                <div class="arrow-north-west" style="font-size: 1.5em;">&xlarr;</div>
+                <div class="label no" style="top:50px; left:-20px;">no</div>
+              </div>
+              <div class="col-md-4 arrow-down">&darr;</div>
+              <div class="col-md-1">
+                <div class="arrow-north-east" style="font-size: 1.5em;">&xrarr;</div>
+                <div class="label yes" style="top:50px; left:60px;">yes</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4"></div>
+              <div class="col-md-4 step question free-crossings">
+                Are there "free" crossings?
+              </div>
+            </div>
+          </div>
+        </section>
+        <section><h2>How do we keep track all of this?</h2>
+          <div class="column-fluid">
+            <div class="row">
+              <div class="col-md-6 fragment">
+                <h3 style="margin-bottom:0; text-transform:none;"><code>Knot</code></h3>
+                <ul>
+                  <li>name</li>
+                  <li>crossings</li>
+                  <li>free_crossings</li>
+                  <li>bridges</li>
+                </ul>
+              </div>
+              <div class="col-md-6 fragment">
+                <h3 style="margin-bottom:0; text-transform:none;"><code>Crossing</code></h3>
+                <ul>
+                  <li>pd_code</li>
+                  <li>bridge</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section><h2>Designating bridges - Pick T's</h2>
+          <div class="container">
+            <div class="row">
+              <div class="col">
+                <div class="fancy-box">
+                  <img src="images/fig_drag_bridge_arrangements.png" alt="dragging an underpass with new crossings covered by bridges">
+                </div>
+              </div>
+            </div>
+            <div class="row fragment">
+              <div class="col-md-4">
+                <div class="fancy-box">
+                  <figure>
+                    <img src="images/fig_bridge_choice_good_1.png" alt="an existing bridge forming the stem of a T with a new bridge">
+                    <figcaption><strong>Good choice</strong></br>red is a T stem</figcaption>
+                  </figure>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="fancy-box">
+                  <figure>
+                    <img src="images/fig_bridge_choice_good_2.png" alt="a new bridge forming the stem of a T with an existing bridge">
+                    <figcaption><strong>Good choice</strong></br>blue is a T stem</figcaption>
+                  </figure>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="fancy-box">
+                  <figure>
+                    <img src="images/fig_bridge_choice_bad.png" alt="a new bridge that does not form a T with an existing bridge">
+                    <figcaption><strong>Poor choice</strong></br>no T stem</figcaption>
+                  </figure>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section> <!-- Dragging underpasses -->
+          <section><h2>Finding good underpasses to drag</h2>
+          </section>
+          <section><h3>Crossing arrangements</h3>
+            <div class="container">
+              <div class="row">
+                <div class="col">
+                  <div class="fancy-box">
+                    <img src="images/fig_drag_ac_perpendicular_eg_colored.png" alt="diagram segments with ac perpendicular to eg">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="fancy-box">
+                    <img src="images/fig_drag_ac_parallel_eg_colored.png" alt="diagram segments with ac perpendicular to eg">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section><h3>Follow the T stems</h3>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="fancy-box">
+                    <figure>
+                      <img src="images/fig_drag_to_t_stem.png" alt="Follow a bridge T stem to a crossing which can be dragged">
+                      <figcaption>(a,b,c,d) can be dragged</figcaption>
+                    </figure>
+                  </div>
+                </div>
+                <div class="col-md-1"></div>
+                <div class="col-md-5">
+                  <div class="fancy-box">
+                    <figure>
+                      <img src="images/fig_cannot_drag_to_t_stem.png" alt="Follow a bridge T stem to a crossing which cannot be dragged">
+                      <figcaption>(a,b,c,d) cannot be dragged</figcaption>
+                    </figure>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section><h3>Drag count</h3>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col">
+                  <div class="fancy-box">
+                    <figure>
+                      <img src="images/fig_drag_to_t_stem_multiple.png" alt="Follow a bridge T stem under multiple bridges to a free crossing which can be dragged">
+                      <figcaption>(a,b,c,d) can be dragged multiple times</figcaption>
+                    </figure>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section><h3>...is only a maximum</h3>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="fancy-box">
+                    <figure>
+                      <img src="images/fig_drag_less_than_drag_count.png" alt="Follow a T stem under 3 bridges to a free crossing">
+                      <figcaption>drag count of 3</figcaption>
+                    </figure>
+                  </div>
+                </div>
+                <div class="col-sm-6 fragment">
+                  <div class="fancy-box">
+                    <figure>
+                      <img src="images/fig_drag_underpass_once.png" alt="crossing with drag count of 3 covered by bridge after one drag move">
+                      <figcaption>only one drag move needed</figcaption>
+                    </figure>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </section>
+        <section> <!-- Simplified bridges -->
+          <section><h2>Simplified bridges</h2>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col">
+                  <div class="fancy-box">
+                    <figure>
+                      <img src="images/fig_bridge_to_simple_arc.png" alt="bridges turned to simple arcs by Reidemeister moves of type 1 and type 2">
+                      <figcaption>bridges turned to simple arcs</figcaption>
+                    </figure>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section><h3>Example</h3>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col">
+                  <div class="fancy-box">
+                    <img src="images/fig_knot_bridges_simple_arc.png" alt="a labeled diagram before and after a Reidemeister move of type 1 eliminates a bridge">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col" style="text-align: left; font-size:80%;">
+                  <div ><strong>Before:</strong> <code>knot.bridges={0:[3,4], 1:[9,10], 2:[5,7]}</code></div>
+                  <div class="fragment" style="text-align: left;"><strong>After:</strong> <code>knot.bridges={0:[2,2], 1:[7,8], 2:[3,5]}</code></div>
+                  <div class="fragment" style="text-align: left;"><strong>Adjusted:</strong> <code>knot.bridges={1:[7,8], 2:[3,5]}</code></div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section><h2>Merged bridges</h2>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col">
+                  <div class="fancy-box">
+                    <figure>
+                      <img src="images/fig_bridge_merge.png" alt="bridges merged by Reidemeister moves of type 1 and type 2">
+                      <figcaption>bridges merged together</figcaption>
+                    </figure>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section><h3>Example</h3>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col">
+                  <div class="fancy-box">
+                    <img src="images/fig_knot_bridges_merged.png" alt="a labeled diagram before and after a Reidemeister move of type 2 which merged bridges">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col" style="text-align: left; font-size:80%;">
+                  <div ><strong>Before:</strong> <code>knot.bridges={1:[7,8], 2:[3,5]}</code></div>
+                  <div class="fragment" style="text-align: left;"><strong>After:</strong> <code>knot.bridges={{1:[5,6], 2:[3,5]}}</code></div>
+                  <div class="fragment" style="text-align: left;"><strong>Adjusted:</strong> <code>knot.bridges={1:[3,6]}</code></div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </section>
+        <section> <!-- Example 12a_0015 -->
+          <section><h2>Example: 12<sub>a15</sub></h2>
+            <h3>PD code</h3>
+            <span class="color-yellow">[1, 5, 2, 4], [3, 8, 4, 9], [5, 11, 6, 10],</br>[7, 14, 8, 15], [9, 2, 10, 3], [11, 23, 12, 22],</br>[13, 20, 14, 21], [15, 6, 16, 7], [17, 12, 18, 13],</br>[19, 1, 20, 24], [21, 16, 22, 17], [23, 19, 24, 18]</span>
+          </section>
+          <section><h3>Designate <span class="color-red">[5, 4]</span> &amp; <span class="color-green">[8, 9]</span> as bridges</h3>
+            <div class="fancy-box">
+              <img class="fragment current-visible replace" style="margin:0 auto;" src="images/12a_0015-diagrams/large/sage0.png" alt="diagram of 12a_15"/>
+              <img class="fragment current-visible" src="images/12a_0015-diagrams/large/sage0_colored.png" alt="diagram of 12a_15 with bridges colored"/>
+            </div>
+          </section>
+          <section><h3>Drag crossing [9, 2, 10, 3]</h3>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col">
+                  <div class="fancy-box">
+                    <img class="fragment current-visible replace" style="margin:0 auto;" src="images/12a_0015-diagrams/large/sage0_colored_next.png" alt="diagram of 12a_15 with first drag identified">
+                    <img class="fragment current-visible" src="images/12a_0015-diagrams/large/sage1_colored.png" alt="diagram of 12a_15 after first drag sequence">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section><h3>Drag crossing [21, 1, 22, 26]</h3>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col">
+                  <div class="fancy-box">
+                    <img class="fragment current-visible replace" style="margin:0 auto;" src="images/12a_0015-diagrams/large/sage1_colored_next.png" alt="diagram of 12a_15 with second drag identified">
+                    <img class="fragment current-visible" src="images/12a_0015-diagrams/large/sage2_colored.png" alt="diagram of 12a_15 after second drag sequence">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section><h3>Drag crossing [7, 17, 8, 16]</h3>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col">
+                  <div class="fancy-box">
+                    <img class="fragment current-visible replace" style="margin:0 auto;" src="images/12a_0015-diagrams/large/sage2_colored_next.png" alt="diagram of 12a_15 with third drag identified">
+                    <img class="fragment current-visible" src="images/12a_0015-diagrams/large/sage3_colored.png" alt="diagram of 12a_15 after third drag sequence">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section><h3>Drag crossing [29, 14, 30, 15]</h3>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col">
+                  <div class="fancy-box">
+                    <img class="fragment current-visible replace" style="margin:0 auto;" src="images/12a_0015-diagrams/large/sage3_colored_next.png" alt="diagram of 12a_15 with fourth drag identified">
+                    <img class="fragment current-visible" src="images/12a_0015-diagrams/large/sage4_colored.png" alt="diagram of 12a_15 after fourth drag sequence">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section><h3>Designate another bridge</h3>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col">
+                  <div class="fancy-box">
+                    <img src="images/12a_0015-diagrams/large/sage4_colored_3_bridges.png" alt="diagram of 12a_15 with three bridges designated">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section><h3>Drag crossing [35, 61, 36, 60]</h3>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col">
+                  <div class="fancy-box">
+                    <img class="fragment current-visible replace" style="margin:0 auto;" src="images/12a_0015-diagrams/large/sage4_colored_3_bridges_next.png" alt="diagram of 12a_15 with fifth drag identified">
+                    <img class="fragment current-visible" src="images/12a_0015-diagrams/large/sage5_colored.png" alt="diagram of 12a_15 after fifth drag sequence">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section><h3>Drag crossing [61, 46, 62, 47]</h3>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col">
+                  <div class="fancy-box">
+                    <img class="fragment current-visible replace" style="margin:0 auto;" src="images/12a_0015-diagrams/large/sage5_colored_next.png" alt="diagram of 12a_15 with sixth drag identified">
+                    <img class="fragment current-visible" src="images/12a_0015-diagrams/large/sage6_colored.png" alt="diagram of 12a_15 after sixth drag sequence">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section><h3>Drag crossing [61, 104, 62, 105]</h3>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col">
+                  <div class="fancy-box">
+                    <img class="fragment current-visible replace" style="margin:0 auto;" src="images/12a_0015-diagrams/large/sage6_colored_next.png" alt="diagram of 12a_15 with seventh drag identified">
+                    <img class="fragment current-visible" src="images/12a_0015-diagrams/large/sage7_colored.png" alt="diagram of 12a_15 after seventh drag sequence">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section><h3>Drag crossing [35, 82, 36, 83]</h3>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col">
+                  <div class="fancy-box">
+                    <img class="fragment current-visible replace" style="margin:0 auto;" src="images/12a_0015-diagrams/large/sage7_colored_next.png" alt="diagram of 12a_15 with eighth drag identified">
+                    <img class="fragment current-visible" src="images/12a_0015-diagrams/large/sage8_colored.png" alt="diagram of 12a_15 after eighth drag sequence">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section><h3>Drag crossing [205, 168, 206, 169]</h3>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col">
+                  <div class="fancy-box">
+                    <img src="images/12a_0015-diagrams/large/sage8_colored_next.png" alt="diagram of 12a_15 with ninth drag identified">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section><h3>No more moves</h3>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col">
+                  <div class="fancy-box">
+                    <img src="images/12a_0015-diagrams/large/sage9_colored.png" alt="diagram of 12a_15 after ninth, final drag sequence">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </section>
+        <section><h2 style="text-transform:none;">But we could have made different choices!</h2>
+        </section>
+        <section> <!-- Results -->
+          <section><h2>Results for knots with 12 crossings</h2>
+          </section>
+          <section><h3 style="text-transform:none;">Knots with b(K) = 4</h3>
+            <div class="column-fluid">
+              <div class="row" style="font-size:80%;">
+                <div class="col">
+                  12<sub>a29</sub></br>
+                  12<sub>a30</sub></br>
+                  12<sub>a33</sub></br>
+                  12<sub>a36</sub></br>
+                  12<sub>a113</sub></br>
+                  12<sub>a114</sub></br>
+                  12<sub>a116</sub></br>
+                  12<sub>a117</sub>
+                </div>
+                <div class="col">
+                  12<sub>a119</sub></br>
+                  12<sub>a122</sub></br>
+                  12<sub>a157</sub></br>
+                  12<sub>a164</sub></br>
+                  12<sub>a166</sub></br>
+                  12<sub>a167</sub></br>
+                  12<sub>a182</sub></br>
+                  12<sub>a195</sub>
+                </div>
+                <div class="col">
+                  12<sub>a554</sub></br>
+                  12<sub>a692</sub></br>
+                  12<sub>a693</sub></br>
+                  12<sub>a694</sub></br>
+                  12<sub>a750</sub></br>
+                  12<sub>a801</sub></br>
+                  12<sub>n55</sub></br>
+                  12<sub>n56</sub>
+                </div>
+                <div class="col">
+                  12<sub>n57</sub></br>
+                  12<sub>n58</sub></br>
+                  12<sub>n59</sub></br>
+                  12<sub>n60</sub></br>
+                  12<sub>n61</sub></br>
+                  12<sub>n62</sub></br>
+                  12<sub>n63</sub></br>
+                  12<sub>n64</sub>
+                </div>
+                <div class="col">
+                  12<sub>n66</sub></br>
+                  12<sub>n67</sub></br>
+                  12<sub>n219</sub></br>
+                  12<sub>n220</sub></br>
+                  12<sub>n221</sub></br>
+                  12<sub>n222</sub></br>
+                  12<sub>n223</sub></br>
+                  12<sub>n224</sub>
+                </div>
+                <div class="col">
+                  12<sub>n225</sub></br>
+                  12<sub>n229</sub></br>
+                  12<sub>n261</sub></br>
+                  12<sub>n553</sub></br>
+                  12<sub>n554</sub></br>
+                  12<sub>n555</sub></br>
+                  12<sub>n556</sub></br>
+                  12<sub>n642</sub>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section><h3 style="text-transform:none;">Knots with b(K) = 2</h3>
+            <div class="column-fluid">
+              <div class="row" style="font-size:70%;">
+                <div class="col">
+                  12<sub>a38</sub></br>
+                  12<sub>a169</sub></br>
+                  12<sub>a197</sub></br>
+                  12<sub>a204</sub></br>
+                  12<sub>a206</sub></br>
+                  12<sub>a221</sub></br>
+                  12<sub>a226</sub></br>
+                  12<sub>a239</sub></br>
+                  12<sub>a241</sub></br>
+                </div>
+                <div class="col">
+                  12<sub>a243</sub></br>
+                  12<sub>a247</sub></br>
+                  12<sub>a251</sub></br>
+                  12<sub>a254</sub></br>
+                  12<sub>a255</sub></br>
+                  12<sub>a257</sub></br>
+                  12<sub>a259</sub></br>
+                  12<sub>a300</sub></br>
+                  12<sub>a302</sub></br>
+                </div>
+                <div class="col">
+                  12<sub>a303</sub></br>
+                  12<sub>a306</sub></br>
+                  12<sub>a307</sub></br>
+                  12<sub>a330</sub></br>
+                  12<sub>a378</sub></br>
+                  12<sub>a379</sub></br>
+                  12<sub>a380</sub></br>
+                  12<sub>a384</sub></br>
+                  12<sub>a385</sub></br>
+                </div>
+                <div class="col">
+                  12<sub>a406</sub></br>
+                  12<sub>a425</sub></br>
+                  12<sub>a437</sub></br>
+                  12<sub>a447</sub></br>
+                  12<sub>a454</sub></br>
+                  12<sub>a471</sub></br>
+                  12<sub>a477</sub></br>
+                  12<sub>a482</sub></br>
+                  12<sub>a497</sub></br>
+                </div>
+                <div class="col">
+                  12<sub>a498</sub></br>
+                  12<sub>a499</sub></br>
+                  12<sub>a500</sub></br>
+                  12<sub>a501</sub></br>
+                  12<sub>a502</sub></br>
+                  12<sub>a506</sub></br>
+                  12<sub>a508</sub></br>
+                  12<sub>a510</sub></br>
+                  12<sub>a511</sub></br>
+                </div>
+                <div class="col">
+                  12<sub>a512</sub></br>
+                  12<sub>a514</sub></br>
+                  12<sub>a517</sub></br>
+                  12<sub>a518</sub></br>
+                  12<sub>a519</sub></br>
+                  12<sub>a520</sub></br>
+                  12<sub>a521</sub></br>
+                  12<sub>a522</sub></br>
+                  12<sub>a528</sub></br>
+                </div>
+                <div class="col">
+                  12<sub>a532</sub></br>
+                  12<sub>a533</sub></br>
+                  12<sub>a534</sub></br>
+                  12<sub>a535</sub></br>
+                  12<sub>a536</sub></br>
+                  12<sub>a537</sub></br>
+                  12<sub>a538</sub></br>
+                  12<sub>a539</sub></br>
+                  12<sub>a540</sub></br>
+                </div>
+                <div class="col">
+                  12<sub>a541</sub></br>
+                  12<sub>a545</sub></br>
+                  12<sub>a549</sub></br>
+                  12<sub>a550</sub></br>
+                  12<sub>a551</sub></br>
+                  12<sub>a552</sub></br>
+                  12<sub>a579</sub></br>
+                  12<sub>a580</sub></br>
+                  12<sub>a581</sub></br>
+                </div>
+              </div>
+              <div class="row" style="font-size:50%;">
+                <div class="col" style="text-align:right;">
+                list continues
+              </div>
+            </div>
+          </section>
+          <section> <!-- b(K)=2 continued -->
+            <div class="column-fluid">
+              <div class="row" style="font-size:70%;">
+                <div class="col">
+                  12<sub>a582</sub></br>
+                  12<sub>a583</sub></br>
+                  12<sub>a584</sub></br>
+                  12<sub>a585</sub></br>
+                  12<sub>a595</sub></br>
+                  12<sub>a596</sub></br>
+                  12<sub>a597</sub></br>
+                  12<sub>a600</sub></br>
+                  12<sub>a601</sub></br>
+                  12<sub>a643</sub></br>
+                  12<sub>a644</sub></br>
+                  12<sub>a649</sub></br>
+                  12<sub>a650</sub></br>
+                </div>
+                <div class="col">
+                  12<sub>a651</sub></br>
+                  12<sub>a652</sub></br>
+                  12<sub>a682</sub></br>
+                  12<sub>a684</sub></br>
+                  12<sub>a690</sub></br>
+                  12<sub>a691</sub></br>
+                  12<sub>a713</sub></br>
+                  12<sub>a714</sub></br>
+                  12<sub>a715</sub></br>
+                  12<sub>a716</sub></br>
+                  12<sub>a717</sub></br>
+                  12<sub>a718</sub></br>
+                  12<sub>a720</sub></br>
+                </div>
+                <div class="col">
+                  12<sub>a721</sub></br>
+                  12<sub>a722</sub></br>
+                  12<sub>a723</sub></br>
+                  12<sub>a724</sub></br>
+                  12<sub>a726</sub></br>
+                  12<sub>a727</sub></br>
+                  12<sub>a728</sub></br>
+                  12<sub>a729</sub></br>
+                  12<sub>a731</sub></br>
+                  12<sub>a732</sub></br>
+                  12<sub>a733</sub></br>
+                  12<sub>a736</sub></br>
+                  12<sub>a738</sub></br>
+                </div>
+                <div class="col">
+                  12<sub>a740</sub></br>
+                  12<sub>a743</sub></br>
+                  12<sub>a744</sub></br>
+                  12<sub>a745</sub></br>
+                  12<sub>a758</sub></br>
+                  12<sub>a759</sub></br>
+                  12<sub>a760</sub></br>
+                  12<sub>a761</sub></br>
+                  12<sub>a762</sub></br>
+                  12<sub>a763</sub></br>
+                  12<sub>a764</sub></br>
+                  12<sub>a773</sub></br>
+                  12<sub>a774</sub></br>
+                </div>
+                <div class="col">
+                  12<sub>a775</sub></br>
+                  12<sub>a791</sub></br>
+                  12<sub>a792</sub></br>
+                  12<sub>a796</sub></br>
+                  12<sub>a797</sub></br>
+                  12<sub>a802</sub></br>
+                  12<sub>a803</sub></br>
+                  12<sub>a1023</sub></br>
+                  12<sub>a1024</sub></br>
+                  12<sub>a1029</sub></br>
+                  12<sub>a1030</sub></br>
+                  12<sub>a1033</sub></br>
+                  12<sub>a1034</sub></br>
+                </div>
+                <div class="col">
+                  12<sub>a1039</sub></br>
+                  12<sub>a1040</sub></br>
+                  12<sub>a1125</sub></br>
+                  12<sub>a1126</sub></br>
+                  12<sub>a1127</sub></br>
+                  12<sub>a1128</sub></br>
+                  12<sub>a1129</sub></br>
+                  12<sub>a1130</sub></br>
+                  12<sub>a1131</sub></br>
+                  12<sub>a1132</sub></br>
+                  12<sub>a1133</sub></br>
+                  12<sub>a1134</sub></br>
+                  12<sub>a1135</sub></br>
+                </div>
+                <div class="col">
+                  12<sub>a1136</sub></br>
+                  12<sub>a1138</sub></br>
+                  12<sub>a1139</sub></br>
+                  12<sub>a1140</sub></br>
+                  12<sub>a1145</sub></br>
+                  12<sub>a1146</sub></br>
+                  12<sub>a1148</sub></br>
+                  12<sub>a1149</sub></br>
+                  12<sub>a1157</sub></br>
+                  12<sub>a1158</sub></br>
+                  12<sub>a1159</sub></br>
+                  12<sub>a1161</sub></br>
+                  12<sub>a1162</sub></br>
+                </div>
+                <div class="col">
+                  12<sub>a1163</sub></br>
+                  12<sub>a1165</sub></br>
+                  12<sub>a1166</sub></br>
+                  12<sub>a1273</sub></br>
+                  12<sub>a1274</sub></br>
+                  12<sub>a1275</sub></br>
+                  12<sub>a1276</sub></br>
+                  12<sub>a1277</sub></br>
+                  12<sub>a1278</sub></br>
+                  12<sub>a1279</sub></br>
+                  12<sub>a1281</sub></br>
+                  12<sub>a1282</sub></br>
+                  12<sub>a1287</sub></br>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section><h3 style="text-transform:none;">All the others have b(K)=3.</h3>
+          </section>
+        </section>
+      </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+      // More info about config & dependencies:
+      // - https://github.com/hakimel/reveal.js#configuration
+      // - https://github.com/hakimel/reveal.js#dependencies
+      Reveal.initialize({
+        dependencies: [
+          { src: 'plugin/markdown/marked.js' },
+          { src: 'plugin/markdown/markdown.js' },
+          { src: 'plugin/notes/notes.js', async: true },
+          { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+        ]
+      });
+    </script>
+  </body>
+</html>
