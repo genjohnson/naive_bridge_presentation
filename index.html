@@ -32,6 +32,36 @@
           <div class="event">MA thesis defense, Fall 2017</br>
           University of Northern Iowa</div>
         </section>
+        <section><h2>What are we talking about?</h2> <!-- overview of presentation -->
+          <ol>
+            <li class="fragment">Knots, diagrams &amp; the bridge index</li>
+            <li class="fragment">Planar diagram codes</li>
+            <li class="fragment">Reidemeister moves</li>
+            <li class="fragment">Putting these ideas together in code</li>
+          </ol>
+          <aside class="notes">
+            <strong>Knots, diagrams &amp; the bridge index</strong>
+            <ul>
+              <li>What knots are</li>
+              <li>How we depict 3 dimensional knots in 2 dimesions</li>
+              <li>Define the bridge index of a knot</li>
+            </ul>
+            <strong>PD codes</strong>
+            <ul>
+              <li>A numerical representation of a knot</li>
+            </ul>
+            <strong>RM moves</strong>
+            <ul>
+              <li>Ways to manipulate a diagram w/o changing the knot itself</li>
+              <li>How the PD code changes when a move is performed</li>
+            </ul>
+            <strong>Putting this in code</strong>
+            <ul>
+              <li>The process the code goes through</li>
+              <li>Efficiencies we found along the way</li>
+            </ul>
+          </aside>
+        </section>
         <section> <!-- intro to Knots & diagrams -->
           <section><h2>Knots &amp; diagrams</h2>
             <div class="container-fluid">
@@ -80,6 +110,28 @@
                         <img src="images/fig_bridge.png" alt="a bridge">
                         <figcaption>bridge</figcaption>
                       </figure>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section><h2>Bridge count vs. bridge index</h2>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="fancy-box">
+                    <figure>
+                      <img src="images/3_1_bridge_count.png" alt="a diagram of the trefoil with 3 bridges">
+                      <figcaption>bridge count</figcaption>
+                    </figure>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="fancy-box">
+                    <figure>
+                      <img src="images/3_1_bridge_index.png" alt="a diagram of the trefoil in 2 bridge form">
+                      <figcaption>bridge index</figcaption>
+                    </figure>
                   </div>
                 </div>
               </div>
@@ -494,28 +546,6 @@
               </div>
             </div>
           </section>
-        </section>
-        <section><h2>Bridge count vs. bridge index</h2>
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col-sm-6">
-                <div class="fancy-box">
-                  <figure>
-                    <img src="images/3_1_bridge_count.png" alt="a diagram of the trefoil with 3 bridges">
-                    <figcaption>bridge count</figcaption>
-                  </figure>
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="fancy-box">
-                  <figure>
-                    <img src="images/3_1_bridge_index.png" alt="a diagram of the trefoil in 2 bridge form">
-                    <figcaption>bridge index</figcaption>
-                  </figure>
-                </div>
-              </div>
-            </div>
-          </div>
         </section>
         <section><h2>Terminology change!</h2>
           <dl>
