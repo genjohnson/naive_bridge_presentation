@@ -194,6 +194,9 @@
                 </div>
               </div>
             </div>
+            <aside class="notes">
+              PD code depends on starting point and orientation (direction of travel)
+            </aside>
           </section>
           <section><h3>Draw a diagram from a PD code</h3>
             <p>(2,6,3,5)(4,2,5,1)(6,4,1,3)</p>
@@ -267,6 +270,12 @@
                 </div>
               </div>
             </div>
+            <aside class="notes">
+              <ul>
+                <li>4 diagram segment arragments which can be simplified by RM1</li>
+                <li>the corresponding PD code tuple has at most 3 unique values (b/c the loop value is repeated)</li>
+              </ul>
+            </aside>
           </section>
           <section><h2>The usual label changes</h2>
             <div class="row d-flex justify-content-center">
@@ -290,6 +299,13 @@
                 </div>
               </div>
             </div>
+            <aside class="notes">
+              <ul>
+                <li>b is label of edge which is loop</li>
+                <li>Labels of edges before b do not change</li>
+                <li>Labels of edges after b decrease by 2 (b/c of edges which are merged together)</li>
+              </ul>
+            </aside>
           </section>
           <section><h3>...unless b=1</h3>
             <div class="fragment current-visible replace">
@@ -343,6 +359,16 @@
                 </div>
               </div>
             </div>
+            <aside class="notes">
+              <strong>problem</strong>
+              <ul>
+                <li>Edge has 2 labels b/c 2 &amp; m map to different values</li>
+              </ul>
+              <strong>solution</strong>
+              <ul>
+                <li>map 2 to same value as m (m-2)</li>
+              </ul>
+            </aside>
           </section>
           <section><h3>...or b=m</h3>
             <div class="fragment current-visible replace">
@@ -396,6 +422,16 @@
                 </div>
               </div>
             </div>
+            <aside class="notes">
+              <strong>problem</strong>
+              <ul>
+                <li>Edge has 2 labels b/c 1 &amp; m-1 map to different values</li>
+              </ul>
+              <strong>solution</strong>
+              <ul>
+                <li>map m-1 to same value as 1 (1)</li>
+              </ul>
+            </aside>
           </section>
         </section>
         <section> <!-- Reidemeister move type 2 -->
@@ -405,12 +441,19 @@
                 <div class="col-md-12">
                   <div class="fancy-box">
                     <figure>
-                        <img src="images/fig_rm2_pd_codes.png" alt="Diagram segments simplifiable by a Reidemeister move of type 2 without edge 1 in the loop">
+                        <img src="images/fig_rm2_pd_codes.png" alt="Diagram segments simplifiable by a Reidemeister move of type 2">
                       </figure>
                   </div>
                 </div>
               </div>
             </div>
+            <aside class="notes">
+              2 patterns to PD code tuples
+              <ul>
+                <li>2nd elements equal &amp; 3rd and 1st elements equal</li>
+                <li>3rd and 1st elements equal &amp; 4th elements equal</li>
+              </ul>
+            </aside>
           </section>
           <section><h2>The usual label changes</h2>
             <div class="row d-flex justify-content-center">
@@ -435,6 +478,15 @@
                 </div>
               </div>
             </div>
+            <aside class="notes">
+              <ul>
+                <li>n<sub>1 - least label of edge involved in the loop</li>
+                <li>n<sub>2 - greatest label of edge involved in the loop</li>
+                <li>labels of edges before n<sub>1 are not affected</li>
+                <li>labels of edges after n<sub>1 decrease by 2 b/c of merged edges</li>
+                <li>labels of edges after n<sub>2 decrease by additional 2 (for a totla of 4) b/c of more merged edges</li>
+              </ul>
+            </aside>
           </section>
           <section><h3>...unless edge 1 is involved</h3>
             <div class="fragment current-visible replace">
@@ -490,6 +542,16 @@
                 </div>
               </div>
             </div>
+            <aside class="notes">
+              <strong>problem</strong>
+              <ul>
+                <li>labels 2 and m are mapped to different values</li>
+              </ul>
+              <strong>solution</strong>
+              <ul>
+                <li>map 2 to the same value as m (m-4)</li>
+              </ul>
+            </aside>
           </section>
         </section>
         <section> <!-- Drag the underpass" move -->
