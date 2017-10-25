@@ -31,6 +31,12 @@
           <div class="presenter">Genevieve Johnson</div>
           <div class="event">MA thesis defense, Fall 2017</br>
           University of Northern Iowa</div>
+          <aside class="notes">
+            <ul>
+              <li>Introduce yourself</li>
+              <li>thank you for joining me this afternoon to discuss...</li>
+            </ul>
+          </aside>
         </section>
         <section><h2>What are we talking about?</h2> <!-- overview of presentation -->
           <ol>
@@ -157,9 +163,9 @@
                 <div class="col-sm-6">
                   <div class="fancy-box" style="height: 359px; position: relative;">
                     <img src="images/fig_pd_code_crossing_2.png" alt="a diagram of the trefoil">
-                    <img class="fragment" data-fragment-index="2" src="images/fig_pd_code_crossing_1.png" style="position:relative; top:-318px;" alt="a diagram of the trefoil with a starting point and orientation chosen">
-                    <img class="fragment" data-fragment-index="3" src="images/fig_pd_code_crossing_0.png" style="position:relative; top:-636px;" alt="a labeled diagram of the trefoil">
-                    <img class="fragment" data-fragment-index="4" src="images/fig_pd_code_crossing.png" style="position:relative; top:-954px;" alt="a labeled diagram of the trefoil with planar diagram code (2,6,3,5)(4,2,5,1)(6,4,1,3)">
+                    <img class="fragment" data-fragment-index="2" src="images/fig_pd_code_crossing_1.png" style="position:relative; top:-313px;" alt="a diagram of the trefoil with a starting point and orientation chosen">
+                    <img class="fragment" data-fragment-index="3" src="images/fig_pd_code_crossing_0.png" style="position:relative; top:-626px;" alt="a labeled diagram of the trefoil">
+                    <img class="fragment" data-fragment-index="4" src="images/fig_pd_code_crossing.png" style="position:relative; top:-939px;" alt="a labeled diagram of the trefoil with planar diagram code (2,6,3,5)(4,2,5,1)(6,4,1,3)">
                   </div>
                   <p style="font-size:95%;" class="fragment fade-out" data-fragment-index="1">(2,6,3,5)(4,2,5,1)(6,4,1,3)</p>
                   <p style="font-size:95%; top:-69px; position:relative;"><span class="fragment fade-in" data-fragment-index="5">(2,6,3,5)</span><span class="fragment fade-in" data-fragment-index="6">(4,2,5,1)</span><span class="fragment fade-in" data-fragment-index="7">(6,4,1,3)</span></p>
@@ -496,7 +502,7 @@
                 <li>n<sub>2 - greatest label of edge involved in the loop</li>
                 <li>labels of edges before n<sub>1 are not affected</li>
                 <li>labels of edges after n<sub>1 decrease by 2 b/c of merged edges</li>
-                <li>labels of edges after n<sub>2 decrease by additional 2 (for a totla of 4) b/c of more merged edges</li>
+                <li>labels of edges after n<sub>2 decrease by additional 2 (for a total of 4) b/c of more merged edges</li>
               </ul>
             </aside>
           </section>
@@ -836,6 +842,12 @@
               </div>
             </div>
           </div>
+          <aside class="notes">
+            <ul>
+              <li>For all of the new crossings on the RIGHT to be covered by a bridge, the sections in RED must be bridges</li>
+              <li>BLUE (new bridge) must form a T stem or crossbar with an existing (RED) bridge</li>
+            </ul>
+          </aside>
         </section>
         <section> <!-- Dragging underpasses -->
           <section><h2>Finding good underpasses to drag</h2>
@@ -849,7 +861,7 @@
                   </div>
                 </div>
               </div>
-              <div class="row">
+              <div class="row fragment fade-out">
                 <div class="col">
                   <div class="fancy-box">
                     <img src="images/fig_drag_ac_parallel_eg_colored.png" alt="diagram segments with ac perpendicular to eg">
@@ -857,6 +869,12 @@
                 </div>
               </div>
             </div>
+            <aside class="notes">
+              <ul>
+              <li>8 ways for adjacent crossings (a,b,c,d) and (e,f,g,h) to be arranged</li>
+              <li>If (e,f,g,h) is covered by a bridge, the red section is a bridge => we only need to consider the top four arrangements</li>
+            </ul>
+            </aside>
           </section>
           <section><h3>Follow the T stems</h3>
             <div class="container-fluid">
@@ -880,6 +898,13 @@
                 </div>
               </div>
             </div>
+            <aside class="notes">
+              <ul>
+                <li>we can more efficiently find crossings to drag by following T stem under crossbar.</li>
+                <li>we can only drag if segment ac is parallel to the crossbar</li>
+                <li>this is original work</li>
+              </ul>
+            </aside>
           </section>
           <section><h3>Drag count</h3>
             <div class="container-fluid">
@@ -894,6 +919,12 @@
                 </div>
               </div>
             </div>
+            <aside class="notes">
+              <ul>
+                <li>we can drag multiple times so long as we end on a T stem</li>
+                <li>drag count = # of crossbars (# of drag moves) to get to T stem</li>
+              </ul>
+            </aside>
           </section>
           <section><h3>...is only a maximum</h3>
             <div class="container-fluid">
@@ -950,6 +981,13 @@
                 </div>
               </div>
             </div>
+            <aside class="notes">
+              <ul>
+                <li># to left of colon is ID</li>
+                <li>entries in list ot right of colon is labels of bridge ends</li>
+                <li>bridge -> simple arc if both bridge ends have same value</li>
+              </ul>
+            </aside>
           </section>
           <section><h2>Merged bridges</h2>
             <div class="container-fluid">
@@ -982,12 +1020,23 @@
                 </div>
               </div>
             </div>
+            <aside class="notes">
+              <ul>
+                <li>2 bridges -> 1 bridge if two bridges have same end value</li>
+              </ul>
+            </aside>
           </section>
         </section>
         <section> <!-- Example 12a_0015 -->
           <section><h2>Example: 12<sub>a15</sub></h2>
             <h3>PD code</h3>
             <span class="color-yellow">[1, 5, 2, 4], [3, 8, 4, 9], [5, 11, 6, 10],</br>[7, 14, 8, 15], [9, 2, 10, 3], [11, 23, 12, 22],</br>[13, 20, 14, 21], [15, 6, 16, 7], [17, 12, 18, 13],</br>[19, 1, 20, 24], [21, 16, 22, 17], [23, 19, 24, 18]</span>
+            <aside class="notes">
+              <ul>
+                <li>putting all this together, what the process looks like</li>
+                <li>heads up: diagrams generated using Sage, so not easy to follow</li>
+              </ul>
+            </aside>
           </section>
           <section><h3>Designate <span class="color-red">[5, 4]</span> &amp; <span class="color-green">[8, 9]</span> as bridges</h3>
             <div class="fancy-box">
@@ -1006,6 +1055,11 @@
                 </div>
               </div>
             </div>
+            <aside class="notes">
+              <ul>
+                <li>after previous drag, we also needed to simplify by RM1</li>
+              </ul>
+            </aside>
           </section>
           <section><h3>Drag crossing [21, 1, 22, 26]</h3>
             <div class="container-fluid">
@@ -1126,8 +1180,23 @@
           </section>
         </section>
         <section><h2 style="text-transform:none;">But we could have made different choices!</h2>
+          <aside class="notes">
+            <ul>
+              <li>initial bridge T choice &amp; each additional bridge</li>
+              <li>the program keeps a list of all options whenever a choice needs to be made &amp; processes all possibilities</li>
+              <li>program then returns minimum number of bridges after considering all these options</li>
+            </ul>
+          </aside>
         </section>
-        <section><h2>We've processed about 3,000 knots</h2>
+        <section><h2>We've processed about 3,000 knots
+        </br>
+        <span class="fragment fade-in">and can do more</span></h2>
+          <aside class="notes">
+              <ul>
+                <li>used PD codes from KnotInfo</li>
+                <li>we can process more - just need PD codes</li>
+              </ul>
+            </aside>
         </section>
         <section> <!-- Results for knots with 12 crossings -->
           <section><h2>Results for knots with 12 crossings</h2>
@@ -1197,6 +1266,11 @@
                 </div>
               </div>
             </div>
+            <aside class="notes">
+              <ul>
+                <li>48 with b(K)=4</li>
+              </ul>
+            </aside>
           </section>
           <section><h3 style="text-transform:none;">Knots with b(K) = 2</h3>
             <div class="column-fluid">
@@ -1295,6 +1369,11 @@
                 list continues
               </div>
             </div>
+            <aside class="notes">
+              <ul>
+                <li>176 with b(K)=2</li>
+              </ul>
+            </aside>
           </section>
           <section> <!-- b(K)=2 continued -->
             <div class="column-fluid">
@@ -1423,11 +1502,21 @@
             </div>
           </section>
           <section><h3 style="text-transform:none;">All the others have b(K)=3.</h3>
+            <aside class="notes">
+              <ul>
+                <li>1,952 with b(K)=3</li>
+                <li>results equal to b(K) published on KnotInfo</li>
+              </ul>
+            </aside>
           </section>
         </section>
-        <section><h2>We could do more</h2>
-        </section>
         <section><h2>Thank you!</h2>
+          <aside class="notes">
+              <ul>
+                <li>Thank you for coming</li>
+                <li>Questions?</li>
+              </ul>
+            </aside>
         </section>
       </div>
     </div>
